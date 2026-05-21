@@ -151,7 +151,7 @@ async function submitTicket(e) {
       body: JSON.stringify({ eventId: currentEventId, buyerName: name, buyerEmail: email, buyerPhone: phone, quantity: qty }),
     });
     const d = await r.json();
-    if (!r.ok) throw new Error(d.error || 'Payment failed');
+    if (!r.ok) throw new Error(d.detail ? `${d.error}: ${d.detail}` : d.error || 'Payment failed');
 
     statusEl.className = 'pay-status success';
     statusEl.textContent = '✓ ' + (d.message || 'Check your phone for the M-Pesa prompt!');

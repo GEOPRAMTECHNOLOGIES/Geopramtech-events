@@ -120,6 +120,7 @@ app.post('/api/tickets/buy', async (req, res) => {
   } catch (err) {
     order.status = 'failed';
     await order.save();
+    console.error('M-Pesa checkout failed', err.response?.data || err.message || err);
     res.status(500).json({ error: 'M-Pesa request failed', detail: err.message });
   }
 });
