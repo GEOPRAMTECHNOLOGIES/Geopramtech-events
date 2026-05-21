@@ -175,6 +175,10 @@ async function saveEvent(e) {
     description: document.getElementById('ev-desc').value.trim(),
     bannerColor: selectedColor,
     imageEmoji: selectedEmoji,
+    imageUrls: document.getElementById('ev-images').value
+      .split(',')
+      .map(u => u.trim())
+      .filter(Boolean),
     featured: document.getElementById('ev-featured').checked,
   };
 
@@ -214,6 +218,7 @@ async function editEvent(id) {
     document.getElementById('ev-price').value = e.price;
     document.getElementById('ev-status').value = e.status;
     document.getElementById('ev-desc').value = e.description;
+    document.getElementById('ev-images').value = (e.imageUrls || []).join(', ');
     document.getElementById('ev-featured').checked = e.featured;
     selectedColor = e.bannerColor;
     selectedEmoji = e.imageEmoji;
@@ -240,6 +245,7 @@ function resetForm() {
   document.getElementById('save-btn').textContent = 'Create event';
   document.getElementById('edit-id').value = '';
   document.getElementById('form-msg').className = 'form-msg';
+  document.getElementById('ev-images').value = '';
 }
 
 initAdmin();

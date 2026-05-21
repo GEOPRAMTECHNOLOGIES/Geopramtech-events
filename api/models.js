@@ -13,6 +13,7 @@ const EventSchema = new mongoose.Schema({
   status: { type: String, enum: ['Upcoming','Live','Past'], default: 'Upcoming' },
   bannerColor: { type: String, default: '#1D9E75' },
   imageEmoji: { type: String, default: '🎪' },
+  imageUrls: { type: [String], default: [] },
   featured: { type: Boolean, default: false },
 }, { timestamps: true });
 

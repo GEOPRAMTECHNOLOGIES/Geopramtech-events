@@ -62,12 +62,13 @@
 
 <!-- Buy ticket modal -->
 <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div id="modal-event-banner" class="modal-banner"></div>
     <div class="modal-body">
       <h2 id="modal-title">Buy Ticket</h2>
       <p id="modal-event-info" class="modal-event-info"></p>
+      <div id="modal-images" class="modal-images"></div>
       <form id="ticket-form" onsubmit="submitTicket(event)">
         <div class="form-group">
           <label>Full name</label>

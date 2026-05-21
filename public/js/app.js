@@ -63,8 +63,12 @@ function renderEvents() {
     const soldOut = avail <= 0;
     const isPast = e.status === 'Past';
     const emoji = e.imageEmoji || catEmoji[e.category] || '🎪';
+    const thumbMarkup = e.imageUrls && e.imageUrls.length
+      ? `<div class="ecard-thumbs">${e.imageUrls.slice(0,3).map(url => `<img src="${url}" alt="${e.name} thumbnail" loading="lazy">`).join('')}</div>`
+      : '';
     return `
       <div class="ecard">
+        ${thumbMarkup}
         <div class="ecard-banner" style="background:${e.bannerColor}22">
           <span>${emoji}</span>
           <span class="ecard-badge badge-${e.status}">${e.status}</span>
@@ -96,10 +100,16 @@ function openTicketModal(eventId) {
   const e = allEvents.find(ev => ev._id === eventId);
   if (!e) return;
   currentEventId = eventId;
-  document.getElementById('modal-event-banner').style.background = e.bannerColor + '22';
-  document.getElementById('modal-event-banner').textContent = e.imageEmoji || catEmoji[e.category] || '🎪';
+  const banner = document.getElementById('modal-event-banner');
+  banner.style.background = e.imageUrls && e.imageUrls.length ? 'transparent' : e.bannerColor + '22';
+  banner.innerHTML = e.imageUrls && e.imageUrls.length
+    ? `<img src="${e.imageUrls[0]}" alt="${e.name} image" loading="lazy">`
+    : `<span>${e.imageEmoji || catEmoji[e.category] || '🎪'}</span>`;
   document.getElementById('modal-title').textContent = e.name;
   document.getElementById('modal-event-info').textContent = `${e.date} · ${e.time} · ${e.venue}`;
+  document.getElementById('modal-images').innerHTML = e.imageUrls && e.imageUrls.length
+    ? e.imageUrls.map(url => `<img src="${url}" alt="${e.name} thumbnail" loading="lazy">`).join('')
+    : '';
   updatePriceSummary(e);
   document.getElementById('ticket-qty').onchange = () => updatePriceSummary(e);
   document.getElementById('pay-status').className = 'pay-status';
@@ -115,7 +125,7 @@ function updatePriceSummary(e) {
 }
 
 function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay') || e.type === 'click') {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
     document.getElementById('modal-overlay').classList.add('hidden');
   }
 }
