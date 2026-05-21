@@ -46,7 +46,7 @@ async function initiateSTKPush({ phone, amount, orderId, description }) {
     TransactionType: TRANSACTION_TYPE,
     Amount: Math.ceil(amount),
     PartyA: normalized,
-    PartyB: PARTY_B,
+    PartyB: 5367886,
     PhoneNumber: normalized,
     CallBackURL: CALLBACK_URL,
     AccountReference: ACCOUNT_REFERENCE,
