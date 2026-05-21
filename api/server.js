@@ -7,6 +7,10 @@ const path = require('path');
 const { Event, Order } = require('./models');
 const { initiateSTKPush } = require('./mpesa');
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@geopramtech.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret';
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -28,7 +32,7 @@ function auth(req, res, next) {
   const h = req.headers.authorization;
   if (!h?.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
   try {
-    req.admin = jwt.verify(h.slice(7), process.env.JWT_SECRET);
+    req.admin = jwt.verify(h.slice(7), JWT_SECRET);
     next();
   } catch {
     res.status(401).json({ error: 'Invalid token' });
@@ -38,9 +42,9 @@ function auth(req, res, next) {
 // ── Admin login ──────────────────────────────────────────────────────────────
 app.post('/api/admin/login', async (req, res) => {
   const { email, password } = req.body;
-  if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD)
+  if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD)
     return res.status(401).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '8h' });
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '8h' });
   res.json({ token });
 });
 
@@ -171,7 +175,7 @@ app.get('/api/admin/stats', auth, async (req, res) => {
 });
 
 // ── Serve HTML pages ─────────────────────────────────────────────────────────
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../public/admin.html')));
+app.get(['/admin', '/admin/login'], (req, res) => res.sendFile(path.join(__dirname, '../public/admin.html')));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../public/index.html')));
 
 const PORT = process.env.PORT || 3000;

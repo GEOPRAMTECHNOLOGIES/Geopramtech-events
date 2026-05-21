@@ -4,6 +4,12 @@ let selectedColor = '#1D9E75';
 let selectedEmoji = '🎵';
 let editingId = null;
 
+function getHeaders(useAuth = false) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (useAuth && token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -44,7 +50,7 @@ function adminLogout() {
   document.getElementById('login-screen').classList.remove('hidden');
 }
 
-function authHeader() { return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }; }
+function authHeader() { return getHeaders(true); }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function initAdmin() {
@@ -95,7 +101,7 @@ async function loadStats() {
 // ── Events table ──────────────────────────────────────────────────────────────
 async function loadEventsTable() {
   try {
-    const r = await fetch(`${API}/api/events`, { headers: authHeader() });
+    const r = await fetch(`${API}/api/events`, { headers: getHeaders(false) });
     const events = await r.json();
     const colors = {Upcoming:'background:#EAF3DE;color:#3B6D11',Live:'background:#FAECE7;color:#993C1D',Past:'background:#f1f1f1;color:#888'};
     document.getElementById('events-tbody').innerHTML = events.map(e => `
@@ -193,7 +199,7 @@ async function saveEvent(e) {
 
 async function editEvent(id) {
   try {
-    const r = await fetch(`${API}/api/events/${id}`, { headers: authHeader() });
+    const r = await fetch(`${API}/api/events/${id}`, { headers: getHeaders(false) });
     const e = await r.json();
     editingId = id;
     document.getElementById('create-title').textContent = 'Edit event';
