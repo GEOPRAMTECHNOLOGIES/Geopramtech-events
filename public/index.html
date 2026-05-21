@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoPramTech Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#1D9E75"/><path d="M8 14l4 4 8-8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>GeoPramTech <em>Events</em></span>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="active">Events</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🇰🇪 Nairobi's premier events platform</div>
+    <h1>Discover &amp; book<br>unforgettable events</h1>
+    <p>From tech summits to jazz nights — all tickets paid via M-Pesa.</p>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search events, venues…">
+      <button onclick="filterEvents()">Search</button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="filters">
+    <button class="filter-chip active" data-cat="all" onclick="setCat(this,'all')">All</button>
+    <button class="filter-chip" data-cat="Music" onclick="setCat(this,'Music')">🎵 Music</button>
+    <button class="filter-chip" data-cat="Tech" onclick="setCat(this,'Tech')">💻 Tech</button>
+    <button class="filter-chip" data-cat="Sports" onclick="setCat(this,'Sports')">⚽ Sports</button>
+    <button class="filter-chip" data-cat="Culture" onclick="setCat(this,'Culture')">🎭 Culture</button>
+    <button class="filter-chip" data-cat="Food & Drink" onclick="setCat(this,'Food & Drink')">🍽️ Food</button>
+    <button class="filter-chip" data-cat="Art" onclick="setCat(this,'Art')">🎨 Art</button>
+    <button class="filter-chip" data-cat="Business" onclick="setCat(this,'Business')">💼 Business</button>
+  </div>
+
+  <div id="stats-bar" class="stats-bar" style="display:none">
+    <div class="stat"><span id="stat-events">–</span><label>Events</label></div>
+    <div class="stat"><span id="stat-tickets">–</span><label>Tickets sold</label></div>
+    <div class="stat"><span id="stat-revenue">–</span><label>KES collected</label></div>
+    <div class="stat"><span id="stat-live">–</span><label>Live now</label></div>
+  </div>
+
+  <div id="events-grid" class="events-grid">
+    <div class="loading">Loading events…</div>
+  </div>
+</main>
+
+<!-- Buy ticket modal -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modal-event-banner" class="modal-banner"></div>
+    <div class="modal-body">
+      <h2 id="modal-title">Buy Ticket</h2>
+      <p id="modal-event-info" class="modal-event-info"></p>
+      <form id="ticket-form" onsubmit="submitTicket(event)">
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="buyer-name" placeholder="Jane Wanjiku" required>
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="buyer-email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>M-Pesa phone number</label>
+          <input type="tel" id="buyer-phone" placeholder="0712 345 678" required>
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <select id="ticket-qty">
+            <option value="1">1 ticket</option>
+            <option value="2">2 tickets</option>
+            <option value="3">3 tickets</option>
+            <option value="4">4 tickets</option>
+            <option value="5">5 tickets</option>
+          </select>
+        </div>
+        <div id="price-summary" class="price-summary"></div>
+        <button type="submit" class="btn-pay" id="pay-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Pay via M-Pesa
+        </button>
+        <div id="pay-status" class="pay-status"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div>© 2026 GeoPramTech Events · Nairobi, Kenya</div>
+  <div>Payments secured via M-Pesa</div>
+</footer>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — GeoPramTech Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- Login screen -->
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#1D9E75"/><path d="M8 14l4 4 8-8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>Admin Access</h2>
+    <p>GeoPramTech Events — restricted area</p>
+    <form onsubmit="adminLogin(event)">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" required autocomplete="current-password">
+      </div>
+      <div id="login-err" class="login-err"></div>
+      <button type="submit" class="btn-login">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin dashboard -->
+<div id="admin-app" class="admin-app hidden">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#1D9E75"/><path d="M8 14l4 4 8-8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>GPT Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="snav active" data-section="overview" onclick="showSection('overview',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="snav" data-section="create" onclick="showSection('create',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        New event
+      </button>
+      <button class="snav" data-section="events" onclick="showSection('events',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </button>
+      <button class="snav" data-section="orders" onclick="showSection('orders',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Orders
+      </button>
+    </nav>
+    <button class="btn-logout" onclick="adminLogout()">Sign out</button>
+  </aside>
+
+  <div class="admin-main">
+    <!-- Overview -->
+    <section id="section-overview" class="asection visible">
+      <h1 class="admin-page-title">Overview</h1>
+      <div class="admin-stats">
+        <div class="astat"><div class="astat-val" id="a-events">–</div><div class="astat-label">Total events</div></div>
+        <div class="astat"><div class="astat-val" id="a-tickets">–</div><div class="astat-label">Tickets sold</div></div>
+        <div class="astat green"><div class="astat-val" id="a-revenue">–</div><div class="astat-label">Revenue (KES)</div></div>
+        <div class="astat orange"><div class="astat-val" id="a-live">–</div><div class="astat-label">Live now</div></div>
+      </div>
+      <div class="card" style="margin-top:24px">
+        <h3>Quick links</h3>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="showSection('create',document.querySelector('[data-section=create]'))">+ Create event</button>
+          <a href="/" target="_blank" class="btn-secondary" style="text-decoration:none">View public site ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Create event -->
+    <section id="section-create" class="asection">
+      <h1 class="admin-page-title" id="create-title">Create event</h1>
+      <form id="event-form" onsubmit="saveEvent(event)" class="card event-form">
+        <input type="hidden" id="edit-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Event name *</label>
+            <input type="text" id="ev-name" required placeholder="e.g. Nairobi Jazz Night">
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="ev-cat" required>
+              <option>Music</option><option>Tech</option><option>Sports</option>
+              <option>Culture</option><option>Food & Drink</option><option>Art</option><option>Business</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="ev-date" required>
+          </div>
+          <div class="form-group">
+            <label>Time *</label>
+            <input type="time" id="ev-time" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Venue *</label>
+            <input type="text" id="ev-venue" required placeholder="e.g. KICC, Nairobi">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="ev-status">
+              <option>Upcoming</option><option>Live</option><option>Past</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total seats *</label>
+            <input type="number" id="ev-seats" required min="1" placeholder="200">
+          </div>
+          <div class="form-group">
+            <label>Ticket price (KES) *</label>
+            <input type="number" id="ev-price" required min="0" placeholder="1500">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="ev-desc" rows="3" placeholder="Describe the event…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Banner colour</label>
+          <div class="color-row">
+            <div class="cswatch sel" style="background:#1D9E75" data-c="#1D9E75" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#378ADD" data-c="#378ADD" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#D85A30" data-c="#D85A30" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#7F77DD" data-c="#7F77DD" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#D4537E" data-c="#D4537E" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#BA7517" data-c="#BA7517" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#639922" data-c="#639922" onclick="pickColor(this)"></div>
+            <div class="cswatch" style="background:#E24B4A" data-c="#E24B4A" onclick="pickColor(this)"></div>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Event emoji (banner icon)</label>
+          <div class="emoji-row">
+            <span class="esel sel" onclick="pickEmoji(this)">🎵</span>
+            <span class="esel" onclick="pickEmoji(this)">💻</span>
+            <span class="esel" onclick="pickEmoji(this)">⚽</span>
+            <span class="esel" onclick="pickEmoji(this)">🎭</span>
+            <span class="esel" onclick="pickEmoji(this)">🍽️</span>
+            <span class="esel" onclick="pickEmoji(this)">🎨</span>
+            <span class="esel" onclick="pickEmoji(this)">💼</span>
+            <span class="esel" onclick="pickEmoji(this)">🎪</span>
+            <span class="esel" onclick="pickEmoji(this)">🏆</span>
+            <span class="esel" onclick="pickEmoji(this)">🌍</span>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;cursor:pointer">
+          <input type="checkbox" id="ev-featured"> Mark as featured
+        </label>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="resetForm()">Cancel</button>
+          <button type="submit" class="btn-primary" id="save-btn">Create event</button>
+        </div>
+        <div id="form-msg" class="form-msg"></div>
+      </form>
+    </section>
+
+    <!-- Events list -->
+    <section id="section-events" class="asection">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h1 class="admin-page-title" style="margin:0">Events</h1>
+        <button class="btn-primary" onclick="showSection('create',document.querySelector('[data-section=create]'))">+ New event</button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="admin-table" id="events-table">
+          <thead><tr><th>Name</th><th>Date</th><th>Category</th><th>Price</th><th>Seats</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="events-tbody"><tr><td colspan="7" class="tbl-loading">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Orders -->
+    <section id="section-orders" class="asection">
+      <h1 class="admin-page-title">Orders</h1>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="admin-table">
+          <thead><tr><th>Event</th><th>Buyer</th><th>Phone</th><th>Qty</th><th>Amount</th><th>M-Pesa ref</th><th>Status</th></tr></thead>
+          <tbody id="orders-tbody"><tr><td colspan="7" class="tbl-loading">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="/js/admin.js"></script>
+</body>
+</html>
