@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const MPESA_BASE = process.env.MPESA_BASE || 'https://sandbox.safaricom.co.ke'; // Change to https://api.safaricom.co.ke for production
 const BUSINESS_SHORTCODE = process.env.MPESA_SHORTCODE || '4574727';
-const PARTY_B = process.env.MPESA_TILL_NUMBER || '5367886';
+const PARTY_B = process.env.MPESA_TILL_NUMBER || '8112723';
 const TRANSACTION_TYPE = process.env.MPESA_TRANSACTION_TYPE || 'CustomerBuyGoodsOnline';
 const CALLBACK_URL = process.env.MPESA_CALLBACK_URL;
 const ACCOUNT_REFERENCE = process.env.MPESA_ACCOUNT_REFERENCE || 'Geopramevents';
