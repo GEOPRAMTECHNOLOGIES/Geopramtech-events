@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const MPESA_BASE = 'https://sandbox.safaricom.co.ke'; // Change to https://api.safaricom.co.ke for production
+const MPESA_BASE = process.env.MPESA_BASE || 'https://sandbox.safaricom.co.ke'; // Change to https://api.safaricom.co.ke for production
 const BUSINESS_SHORTCODE = process.env.MPESA_SHORTCODE || '4574727';
 const PARTY_B = process.env.MPESA_TILL_NUMBER || '5367886';
 const TRANSACTION_TYPE = process.env.MPESA_TRANSACTION_TYPE || 'CustomerBuyGoodsOnline';
@@ -10,9 +10,12 @@ const TRANSACTION_DESC = process.env.MPESA_TRANSACTION_DESC || 'Geopram Technolo
 
 async function getAccessToken() {
   try {
-    const auth = Buffer.from(
-      `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
-    ).toString('base64');
+    const consumerKey = process.env.MPESA_CONSUMER_KEY?.trim();
+    const consumerSecret = process.env.MPESA_CONSUMER_SECRET?.trim();
+    if (!consumerKey || !consumerSecret) {
+      throw new Error('MPESA_CONSUMER_KEY or MPESA_CONSUMER_SECRET is not set or is empty after trimming');
+    }
+    const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
 
     const res = await axios.get(`${MPESA_BASE}/oauth/v1/generate?grant_type=client_credentials`, {
       headers: { Authorization: `Basic ${auth}` },
