@@ -175,7 +175,7 @@ app.get('/api/admin/stats', auth, async (req, res) => {
 });
 
 // ── Serve HTML pages ─────────────────────────────────────────────────────────
-app.get(['/admin', '/admin/login'], (req, res) => res.sendFile(path.join(__dirname, '../public/admin.html')));
+app.get('/admin*', (req, res) => res.sendFile(path.join(__dirname, '../public/admin.html')));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../public/index.html')));
 
 const PORT = process.env.PORT || 3000;
